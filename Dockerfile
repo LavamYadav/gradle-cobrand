@@ -1,7 +1,6 @@
-FROM openjdk:14-alpine
-
-ARG WAR_FILE=./target/*.jar
-
-COPY ${WAR_FILE} sampleapp.jar
-
-CMD ["java", "-Dspring.profiles.active=docker", "-jar", "sampleapp.jar"]
+FROM openjdk:8-jdk-alpine
+ENV PORT 8080
+EXPOSE 8080
+COPY build/libs/*.jar /opt/app.jar
+WORKDIR /opt
+CMD ["java", "-jar", "app.jar"]
