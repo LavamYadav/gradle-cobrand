@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-jenkins
+  labels:
+    app: hello-world
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate 
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hello-world-pod
+        #image:  asia.gcr.io/abstract-stream-316904/java-cobrand-demo:jenkins
+        image: testjfrogd.jfrog.io/default-docker-virtual/my-image:$BUILD_NUMBER
+        ports: 
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: ocirsecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-cobrand-service
+spec:
+  selector:
+    app: hello-world
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer
